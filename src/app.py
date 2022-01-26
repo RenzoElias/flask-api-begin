@@ -69,7 +69,21 @@ tasks_schema = TaskSchema(many=True)
 @app.route('/tasks', methods=['POST'])
 def create_task():
     print(request.json)
-    return 'reveived'
+    # Se extrae los datos del Request, y se asigna a variables
+    title = request.json['title']
+    description = request.json['description']
+    
+    # Se crea el cascaron de una Tarea dando los datos de las variables, osea solo se arma el schema, la tarea
+    new_task = Task(title, description)
+    # Se agrega a la Base de datos
+    db.session.add(new_task)
+    # Terminar con la operacion de agregar
+    db.session.commit()
+    
+    # jsonify - Convierte a json, eso retornaremos
+    return task_schema.jsonify(new_task)
+    
+    # return 'reveived'
 
 # Para crear una tarea el metodo create_task()
 # Printeara el body que manda el back
