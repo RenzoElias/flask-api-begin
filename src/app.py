@@ -3,7 +3,7 @@
 # pymysql - Modulo para poder conectarse con la BD MySQl
 
 # desde flask importare Flask
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -82,7 +82,6 @@ def create_task():
     
     # jsonify - Convierte a json, eso retornaremos
     return task_schema.jsonify(new_task)
-    
     # return 'reveived'
 
 # Para crear una tarea el metodo create_task()
@@ -93,6 +92,57 @@ def create_task():
 # La condicional if, si estamos como la clase principal. Entonces app.run (ejecuta esta app.py) hara que se ejecute en un puerto y que se mostrara en consola y debug=True para que cada que se haga un cambio, se reinicia automaticamente.
 
 # Solo es necesario crear la Base de Datos, ya que las tablas se crean aqui
+
+# Ruta, metodo Get
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    # Consultar el modelo de datos - All retornara todas las tareas, de esa modelo (Tabla)
+    all_tasks = Task.query.all()
+    # Obtendra un Listado del resultado
+    result = tasks_schema.dump(all_tasks)
+    # Para poder mostrarlo como Json
+    return jsonify(result)
+
+# Ruta, metodo Get
+@app.route('/tasks/<id>', methods=['GET'])
+def get_task(id):
+    # Parametro de la funcion con el mismo nombre
+    # Para traer uno en especifico, con el metodo get se envia el parametro unico
+    task = Task.query.get(id)
+    # Si no funciona jsonify(result), la otra manera es asi
+    return task_schema.jsonify(task)
+
+# Ruta, metodo Post
+@app.route('/tasks/<id>', methods=['PUT'])
+def update_task(id):
+    # Encuentras la fila de la tarea
+    task = Task.query.get(id)
+    
+    # Extraes los datos del Req
+    title = request.json['title']
+    description = request.json['description']
+    
+    # Reemplazas la fila de la tarea extraida
+    task.title = title
+    task.description = description
+    
+    db.session.commit()
+    return task_schema.jsonify(task)
+
+# Ruta, metodo Post
+@app.route('/tasks/<id>', methods=['DELETE'])
+def delete_task(id):
+    task = Task.query.get(id)
+    db.session.delete(task)
+    db.session.commit()
+    
+    # Te mostrara la tarea que acabas de eliminar
+    return task_schema.jsonify(task)
+
+# Ruta, metodo Post
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Welcome API'})
 
 if __name__ == "__main__":
     app.run(debug=True)
