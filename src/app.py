@@ -78,5 +78,7 @@ def create_task():
 # Para poder iniciar la aplicacion faltaria
 # La condicional if, si estamos como la clase principal. Entonces app.run (ejecuta esta app.py) hara que se ejecute en un puerto y que se mostrara en consola y debug=True para que cada que se haga un cambio, se reinicia automaticamente.
 
+# Solo es necesario crear la Base de Datos, ya que las tablas se crean aqui
+
 if __name__ == "__main__":
     app.run(debug=True)
