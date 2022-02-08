@@ -35,15 +35,15 @@ class Task(db.Model):
         self.description = description
         
 db.create_all()
-# Metodo Column para definir una columna
-# Metodo Integer para indicarle que es tipo entero
-# Se indica que es un PK
+# Metodo Column para definir una columna - db.Column
+# Se indica que es un PK - primary_key = True
+# Metodo Integer para indicarle que es tipo entero - db.Integer
 # Metodo String para indicarle que es tipo string, (longitud de cuantos caracteres puede soportar, tendra la propiedad Unique, no se puede repetir)
 
 # def - Es el definicion o constructor de la clase Task, que tendra el nombre de __init__ que se ejecutara cada que se instancia esta clase, osea cuando se le invoca (como el constructor de Angular)
 
 # Donde se recibe el tipico self, y los demas parametros de una funcion cualquiera
-# self.title = title # Para usar los datos recibidos y poderlo asignarlos
+# Para usar los datos recibidos y poderlo asignarlos - self.title = title 
 # Esto solo lo define, no lo crea
 # db.create_all() # Esto leera toda la clase, para que recien poder crear las columnas
 
@@ -61,7 +61,8 @@ tasks_schema = TaskSchema(many=True)
 # Con task_schema, Se va instanciar TaskSchema, para que pueda ser usado en otras partes de la app.
 # Para que cuando se quiera crear un solo Task, interactuar
 
-# Para cuando se quiera crear varios Task, entonces con tasks_schema, con la propiedad many=True, para permitir tener multiples datos que obtendra multiples respuestas de la base datos
+# Para cuando se quiera crear varios Task, entonces con tasks_schema, con la propiedad many=True,
+# para permitir tener multiples datos que obtendra multiples respuestas de la base datos
 
 # ====== Ahora a definir las rutas ===== #
 
@@ -73,7 +74,7 @@ def create_task():
     title = request.json['title']
     description = request.json['description']
     
-    # Se crea el cascaron de una Tarea dando los datos de las variables, osea solo se arma el schema, la tarea
+    # Se crea el cascaron de una Tarea dando los datos de las variables, osea solo se arma el Model, la tarea
     new_task = Task(title, description)
     # Se agrega a la Base de datos
     db.session.add(new_task)
@@ -97,7 +98,8 @@ def create_task():
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
     # Consultar el modelo de datos - All retornara todas las tareas, de esa modelo (Tabla)
-    all_tasks = Task.query.all()
+    # Se obiiene todas las tablas
+    all_tasks = Task.query.all() 
     # Obtendra un Listado del resultado
     result = tasks_schema.dump(all_tasks)
     # Para poder mostrarlo como Json
@@ -108,7 +110,7 @@ def get_tasks():
 def get_task(id):
     # Parametro de la funcion con el mismo nombre
     # Para traer uno en especifico, con el metodo get se envia el parametro unico
-    task = Task.query.get(id)
+    task = Task.query.get(id) # Query como metodo para poder extraer
     # Si no funciona jsonify(result), la otra manera es asi
     return task_schema.jsonify(task)
 
