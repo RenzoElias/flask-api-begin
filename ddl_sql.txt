@@ -1,0 +1,11 @@
+create schema flaskmysql
+
+create table flaskmysql.task
+(
+	id int auto_increment
+		primary key,
+	title varchar(70) null,
+	description varchar(100) null,
+	constraint title
+		unique (title)
+);
